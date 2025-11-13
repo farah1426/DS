@@ -202,7 +202,7 @@ public class Main {
                     cdata.RegisterCustomer();
                     break;
                 case 2:
-                    placeOrderForCustomer(); // تتحقق من وجود العميل
+                    placeOrderForCustomer(); 
                     break;
                 case 3:
                     cdata.OrderHistory();
@@ -319,7 +319,7 @@ public class Main {
         } while(choice != 3);
     }
     
-    // Method للـ Customers Menu - تتحقق من وجود العميل
+    
     public static void placeOrderForCustomer() {
         Order newOrder = new Order();
         
@@ -406,7 +406,7 @@ public class Main {
         System.out.println("Order placed successfully! Total: $" + totalPrice);
     }
     
-    // Method للـ Orders Menu - ما تتحقق من وجود العميل
+  
     public static void placeOrder() {
         Order newOrder = new Order();
         
@@ -827,4 +827,5 @@ public class Main {
         
         input.close();
     }
+
 }
