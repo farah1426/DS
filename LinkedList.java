@@ -1,100 +1,79 @@
-package ds;
+package COMM;
 
-class Node<T> {
-	public T data;
-	public Node<T> next;
-	public Node (T val) {
-		data = val;
-		next = null;
-	}
-}
 public class LinkedList<T> {
-	private Node<T> head;
-	private Node<T> current;
-	public LinkedList () {
-		head = current = null;
-	}
-	public boolean empty () {
-		return head == null;
-	}
-	public boolean last () {
-		return current.next == null;
-	}
-	public boolean full () {
-		return false;
-	}
-	public void findFirst () {
-		current = head;
-	}
-	public void findNext () {
-		current = current.next;
-	}
-	public T retrieve () {
-		return current.data;
-	}
-	public void update (T val) {
-		current.data = val;
-	}
-	public void insert (T val) {
-		Node<T> tmp;
-		if (empty()) {
-			current = head = new Node<T> (val);
-		}
-		else {
-			tmp = current.next;
-			current.next = new Node<T> (val);
-			current = current.next;
-			current.next = tmp;
-		}
-	}
-	public void remove () {
-		if (current == head) {
-			head = head.next;
-		}
-		else {
-			Node<T> tmp = head;
-			while (tmp.next != current)
-				tmp = tmp.next;
-			tmp.next = current.next;
-		}
-		if (current.next == null)
-			current = head;
-		else
-			current = current.next;
-	}
-      
-	//added helpping methods 
-	public void display() {
-		if(head==null)
-			System.out.println("empty list");
-		Node<T>p=head;
-		while(p!=null)
-		{			
-			System.out.print(p.data+"  ");
-			p=p.next;
-		}
-	}
-      public boolean exists(T e) {      
-       Node<T>ptr=head;
-       while(ptr!=null)
-       {
-       if(ptr.data.equals(e))    return true;
-       ptr=ptr.next;
-       }
-       return false;
+    private Node<T> head;
+    private Node<T> current;
+    private int size;
+    
+    public LinkedList() {
+        head = null;
+        current = null;
+        size = 0;
     }
-//      public void addLast(T x){
-//      Node<T>temp=new  Node<>(x);
-//      if(head==null)
-//          current=head=temp;
-//        else{
-//          while(current.next!=null)
-//              current=current;
-//          
-//          current.next=temp;
-//          current=temp;
-//         }
-//          
-//        }
-//         
+    
+    public boolean empty() {
+        return head == null;
+    }
+    
+    public void insert(T data) {
+        Node<T> newNode = new Node<>(data);
+        if (empty()) {
+            head = newNode;
+            current = head;
+        } else {
+            newNode.next = head;
+            head = newNode;
+            current = head;
+        }
+        size++;
+    }
+    
+    public void findFirst() {
+        current = head;
+    }
+    
+    public void findNext() {
+        if (current != null) {
+            current = current.next;
+        }
+    }
+    
+    public T retrieve() {
+        return current != null ? current.data : null;
+    }
+    
+    public void remove() {
+        if (current == null) return;
+        
+        if (current == head) {
+            head = head.next;
+            current = head;
+        } else {
+            Node<T> temp = head;
+            while (temp != null && temp.next != current) {
+                temp = temp.next;
+            }
+            if (temp != null) {
+                temp.next = current.next;
+                current = temp.next;
+            }
+        }
+        size--;
+    }
+    
+    public boolean last() {
+        return current == null;
+    }
+    
+    public int size() {
+        return size;
+    }
+    
+    public void print() {
+        Node<T> temp = head;
+        while (temp != null) {
+            System.out.println(temp.data);
+            temp = temp.next;
+        }
+    }
 }

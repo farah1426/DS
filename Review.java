@@ -1,60 +1,50 @@
-package ds;
-
+package COMM;
 
 public class Review {
-    private int reviewIdentifier;
-    private int associatedProductId;
-    private int reviewRating;
-    private int associatedCustomerId;
-    private String reviewComment;
-
-    public Review(int id, int productId, int customerId, int rating, String comment) {
-        this.reviewIdentifier = id;
-        this.associatedProductId = productId;
-        this.associatedCustomerId = customerId;
-        this.reviewRating = rating;
-        this.reviewComment = comment;
+    private int reviewId;
+    private int product;
+    private int customer;
+    private int rating;
+    private String comment;
+    
+    public Review() {}
+    
+    public Review(int reviewId, int product, int customer, int rating, String comment) {
+        this.reviewId = reviewId;
+        this.product = product;
+        this.customer = customer;
+        this.rating = rating;
+        this.comment = comment;
     }
     
-    public void updateReviewDetails(Review updatedReview) {
-        this.reviewIdentifier = updatedReview.reviewIdentifier;
-        this.associatedProductId = updatedReview.associatedProductId;
-        this.associatedCustomerId = updatedReview.associatedCustomerId;
-        this.reviewRating = updatedReview.reviewRating;
-        this.reviewComment = updatedReview.reviewComment;
+    // Getters and Setters
+    public int getReviewId() { return reviewId; }
+    public void setReviewId(int reviewId) { this.reviewId = reviewId; }
+    
+    public int getProduct() { return product; }
+    public void setProduct(int product) { this.product = product; }
+    
+    public int getCustomer() { return customer; }
+    public void setCustomer(int customer) { this.customer = customer; }
+    
+    public int getRating() { return rating; }
+    public void setRating(int rating) { 
+        if (rating >= 1 && rating <= 5) {
+            this.rating = rating;
+        }
     }
     
-    public void modifyReview(int newRating, String newComment) { //مب من مصطفى، من ديب سيك
-        this.reviewRating = newRating;
-        this.reviewComment = newComment;
-    }
-
-    public int getReviewId() { return reviewIdentifier; }
-    public int getProductId() { return associatedProductId; }
-    public int getCustomerId() { return associatedCustomerId; }
-    public int getRating() { return reviewRating; }
-    public String getComment() { return reviewComment; }
+    public String getComment() { return comment; }
+    public void setComment(String comment) { this.comment = comment; }
     
-    
-    
-    
-    public void setReviewRating(int reviewRating) {
-		this.reviewRating = reviewRating;}
-	public void setReviewComment(String reviewComment) {
-		this.reviewComment = reviewComment;}
-    
-
-
-    public void showReviewDetails() {
-        System.out.println("Review ID: " + reviewIdentifier);
-        System.out.println("Product ID: " + associatedProductId);
-        System.out.println("Customer ID: " + associatedCustomerId);
-        System.out.println("Rating: " + reviewRating + "/5");
-        System.out.println("Comment: " + reviewComment);
-        System.out.println("---------------------------------");
-    }
-    
-    public boolean isHighRating() { //مب من مصطفى، من ديب سيك
-        return reviewRating >= 4;
+    @Override
+    public String toString() {
+        return "Review{" +
+                "reviewId=" + reviewId +
+                ", product=" + product +
+                ", customer=" + customer +
+                ", rating=" + rating +
+                ", comment='" + comment + '\'' +
+                '}';
     }
 }
