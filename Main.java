@@ -202,7 +202,7 @@ public class Main {
                     cdata.RegisterCustomer();
                     break;
                 case 2:
-                    placeOrder();
+                    placeOrderForCustomer(); // تتحقق من وجود العميل
                     break;
                 case 3:
                     cdata.OrderHistory();
@@ -234,7 +234,7 @@ public class Main {
             
             switch(choice) {
                 case 1:
-                    placeOrder();
+                    placeOrder(); // ما تتحقق من وجود العميل
                     break;
                 case 2:
                     cancelOrder();
@@ -319,7 +319,8 @@ public class Main {
         } while(choice != 3);
     }
     
-    public static void placeOrder() {
+    // Method للـ Customers Menu - تتحقق من وجود العميل
+    public static void placeOrderForCustomer() {
         Order newOrder = new Order();
         
         System.out.print("Enter order ID: ");
@@ -332,10 +333,12 @@ public class Main {
         
         System.out.print("Enter customer ID: ");
         int customerId = input.nextInt();
-        while(!cdata.checkCustomerID(customerId)) {
-            System.out.print("Customer ID not found. Enter valid customer ID: ");
-            customerId = input.nextInt();
+        
+        if(!cdata.checkCustomerID(customerId)) {
+            System.out.println("Customer ID not found. Cannot place order.");
+            return;
         }
+        
         newOrder.setCustomerRefrence(customerId);
         
         LinkedList<Integer> orderProducts = new LinkedList<>();
@@ -359,6 +362,92 @@ public class Main {
             
             System.out.print("Add another product? (y/n): ");
             addMore = input.next().charAt(0);
+        }
+        
+        if(orderProducts.empty()) {
+            System.out.println("No products added. Order cancelled.");
+            return;
+        }
+        
+        newOrder.setTotal_price(totalPrice);
+        
+        System.out.print("Enter order date (yyyy-MM-dd): ");
+        String dateStr = input.next();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        LocalDate orderDate = LocalDate.parse(dateStr, formatter);
+        newOrder.setDate(orderDate);
+        
+        System.out.print("Enter order status (Pending/Shipped/Delivered/Cancelled): ");
+        newOrder.setStatus(input.next());
+        
+        orderProducts.findFirst();
+        while(!orderProducts.last()) {
+            newOrder.addProduct(orderProducts.retrieve());
+            orderProducts.findNext();
+        }
+        if (!orderProducts.last()) {
+            newOrder.addProduct(orderProducts.retrieve());
+        }
+        
+        orders.insert(newOrder);
+        
+        customers.findFirst();
+        while(!customers.last()) {
+            if(customers.retrieve().getCustomerId() == customerId) {
+                customers.retrieve().addOrder(orderId);
+                break;
+            }
+            customers.findNext();
+        }
+        if (!customers.last() && customers.retrieve().getCustomerId() == customerId) {
+            customers.retrieve().addOrder(orderId);
+        }
+        
+        System.out.println("Order placed successfully! Total: $" + totalPrice);
+    }
+    
+    // Method للـ Orders Menu - ما تتحقق من وجود العميل
+    public static void placeOrder() {
+        Order newOrder = new Order();
+        
+        System.out.print("Enter order ID: ");
+        int orderId = input.nextInt();
+        while(odata.checkOrderID(orderId)) {
+            System.out.print("Order ID already exists. Enter new order ID: ");
+            orderId = input.nextInt();
+        }
+        newOrder.setOrderId(orderId);
+        
+        System.out.print("Enter customer ID: ");
+        int customerId = input.nextInt();
+        newOrder.setCustomerRefrence(customerId);
+        
+        LinkedList<Integer> orderProducts = new LinkedList<>();
+        double totalPrice = 0;
+        char addMore = 'y';
+        
+        while(addMore == 'y' || addMore == 'Y') {
+            System.out.print("Enter product ID: ");
+            int productId = input.nextInt();
+            
+            Product product = pdata.getProductData(productId);
+            if(product != null && product.getStock() > 0) {
+                orderProducts.insert(productId);
+                totalPrice += product.getPrice();
+                
+                product.setStock(product.getStock() - 1);
+                System.out.println("Product added to order. Remaining stock: " + product.getStock());
+            } else {
+                System.out.println("Product not available or out of stock.");
+            }
+            
+            System.out.print("Add another product? (y/n): ");
+            addMore = input.next().charAt(0);
+        }
+        
+        if(orderProducts.empty()) {
+            System.out.println("No products added. Order cancelled.");
+            return;
         }
         
         newOrder.setTotal_price(totalPrice);
@@ -520,115 +609,115 @@ public class Main {
     }
     
     public static void showTop3Products() {
-        LinkedPQ<Product> topProducts = new LinkedPQ<>();//1
+        LinkedPQ<Product> topProducts = new LinkedPQ<>();
         
-        products.findFirst();//2
-        while(!products.last()) {//3
-            Product product = products.retrieve();//4
-            float avgRating = calculateAverageRating(product.getProductId());//5
-            if(avgRating > 0) {//6
-                topProducts.enqueue(product, avgRating);//7
+        products.findFirst();
+        while(!products.last()) {
+            Product product = products.retrieve();
+            float avgRating = calculateAverageRating(product.getProductId());
+            if(avgRating > 0) {
+                topProducts.enqueue(product, avgRating);
             }
-            products.findNext();//8
+            products.findNext();
         }
-        if (!products.last()) {//9
-            Product product = products.retrieve();//10
-            float avgRating = calculateAverageRating(product.getProductId());//11
-            if(avgRating > 0) {//12
-                topProducts.enqueue(product, avgRating);//13
+        if (!products.last()) {
+            Product product = products.retrieve();
+            float avgRating = calculateAverageRating(product.getProductId());
+            if(avgRating > 0) {
+                topProducts.enqueue(product, avgRating);
             }
         }
         
-        System.out.println("Top 3 Products by Average Rating:");//14
-        for(int i = 1; i <= 3 && !topProducts.empty(); i++) {//15
-            PQElement<Product> topProduct = topProducts.serve();//16
+        System.out.println("Top 3 Products by Average Rating:");
+        for(int i = 1; i <= 3 && !topProducts.empty(); i++) {
+            PQElement<Product> topProduct = topProducts.serve();
             System.out.println(i + ". " + topProduct.data.getName() + 
                              " - Rating: " + (topProduct.priority) +
-                             " - Price: $" + topProduct.data.getPrice());//17
+                             " - Price: $" + topProduct.data.getPrice());
         }
     }
     
     public static void showCommonHighlyRatedProducts() {
-        System.out.print("Enter first customer ID: "); //line1
-        int customer1 = input.nextInt(); //line2
-        System.out.print("Enter second customer ID: "); //line3
-        int customer2 = input.nextInt();//line4
-        //line5
+        System.out.print("Enter first customer ID: ");
+        int customer1 = input.nextInt();
+        System.out.print("Enter second customer ID: ");
+        int customer2 = input.nextInt();
+        
         if(!cdata.checkCustomerID(customer1) || !cdata.checkCustomerID(customer2)) {
-            System.out.println("One or both customer IDs are invalid.");//line6
-            return;//line7
+            System.out.println("One or both customer IDs are invalid.");
+            return;
         }
         
-        LinkedList<Integer> customer1Products = getProductsReviewedByCustomer(customer1);//8
-        LinkedList<Integer> customer2Products = getProductsReviewedByCustomer(customer2);//9
+        LinkedList<Integer> customer1Products = getProductsReviewedByCustomer(customer1);
+        LinkedList<Integer> customer2Products = getProductsReviewedByCustomer(customer2);
         
-        System.out.println("Common highly-rated products (rating > 4):");//10
-        boolean found = false;//11
+        System.out.println("Common highly-rated products (rating > 4):");
+        boolean found = false;
         
-        customer1Products.findFirst();//12
-        while(!customer1Products.last()) {//13
-            int productId = customer1Products.retrieve();//14
+        customer1Products.findFirst();
+        while(!customer1Products.last()) {
+            int productId = customer1Products.retrieve();
             
-            customer2Products.findFirst();//15
-            boolean common = false;//16
-            while(!customer2Products.last()) {//17
-                if(customer2Products.retrieve() == productId) {//18
-                    common = true;//19
-                    break;//20
+            customer2Products.findFirst();
+            boolean common = false;
+            while(!customer2Products.last()) {
+                if(customer2Products.retrieve() == productId) {
+                    common = true;
+                    break;
                 }
-                customer2Products.findNext();//21
+                customer2Products.findNext();
             }
-            if (!customer2Products.last() && customer2Products.retrieve() == productId) {//22
-                common = true;//23
+            if (!customer2Products.last() && customer2Products.retrieve() == productId) {
+                common = true;
             }
             
-            if(common) {//24
-                float avgRating = calculateAverageRating(productId);//25
-                if(avgRating > 4.0) {//26
-                    Product product = pdata.getProductData(productId);//27
-                    if(product != null) {//28
+            if(common) {
+                float avgRating = calculateAverageRating(productId);
+                if(avgRating > 4.0) {
+                    Product product = pdata.getProductData(productId);
+                    if(product != null) {
                         System.out.println("- " + product.getName() + 
                                          " (ID: " + productId + 
-                                         ", Avg Rating: " + String.format("%.2f", avgRating) + ")");//29
-                        found = true;//30
+                                         ", Avg Rating: " + String.format("%.2f", avgRating) + ")");
+                        found = true;
                     }
                 }
             }
             
-            customer1Products.findNext();//31
+            customer1Products.findNext();
         }
-        if (!customer1Products.last()) {//32
-            int productId = customer1Products.retrieve();//33
+        if (!customer1Products.last()) {
+            int productId = customer1Products.retrieve();
             
-            customer2Products.findFirst();//34
-            boolean common = false;//35
-            while(!customer2Products.last()) {//36
-                if(customer2Products.retrieve() == productId) {//37
-                    common = true;//38
-                    break;//39
+            customer2Products.findFirst();
+            boolean common = false;
+            while(!customer2Products.last()) {
+                if(customer2Products.retrieve() == productId) {
+                    common = true;
+                    break;
                 }
-                customer2Products.findNext();//40
+                customer2Products.findNext();
             }
-            if (!customer2Products.last() && customer2Products.retrieve() == productId) {//41
-                common = true;//42
+            if (!customer2Products.last() && customer2Products.retrieve() == productId) {
+                common = true;
             }
             
-            if(common) {//43
-                float avgRating = calculateAverageRating(productId);//44
-                if(avgRating > 4.0) {//45
-                    Product product = pdata.getProductData(productId);//46
-                    if(product != null) {//47
+            if(common) {
+                float avgRating = calculateAverageRating(productId);
+                if(avgRating > 4.0) {
+                    Product product = pdata.getProductData(productId);
+                    if(product != null) {
                         System.out.println("- " + product.getName() + 
                                          " (ID: " + productId + 
-                                         ", Avg Rating: " + String.format("%.2f", avgRating) + ")");//48
-                        found = true;//49
+                                         ", Avg Rating: " + String.format("%.2f", avgRating) + ")");
+                        found = true;
                     }
                 }
             }
         }
         
-        if (!found) {//50
-            System.out.println("No common highly-rated products found.");//51
+        if (!found) {
+            System.out.println("No common highly-rated products found.");
         }
     }
     
