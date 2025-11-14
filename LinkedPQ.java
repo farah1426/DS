@@ -15,13 +15,11 @@ public class LinkedPQ<T> {
     public PQElement<T> serve() {
         if (list.empty()) return null;
         
-        // Find element with highest priority and its position
         list.findFirst();
         PQElement<T> highest = list.retrieve();
         int highestPosition = 0;
         int currentPosition = 0;
         
-        // First pass: find the highest priority element and its position
         list.findFirst();
         while (!list.last()) {
             if (list.retrieve().priority > highest.priority) {
@@ -56,3 +54,4 @@ public class LinkedPQ<T> {
     }
 
 }
+
