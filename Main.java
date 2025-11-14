@@ -321,170 +321,170 @@ public class Main {
     
     
     public static void placeOrderForCustomer() {
-        Order newOrder = new Order();
+        Order newOrder = new Order();//1
         
-        System.out.print("Enter order ID: ");
-        int orderId = input.nextInt();
-        while(odata.checkOrderID(orderId)) {
-            System.out.print("Order ID already exists. Enter new order ID: ");
-            orderId = input.nextInt();
+        System.out.print("Enter order ID: ");//2
+        int orderId = input.nextInt();//3
+        while(odata.checkOrderID(orderId)) {//4
+            System.out.print("Order ID already exists Enter new order ID: ");//5
+            orderId = input.nextInt();//6
         }
-        newOrder.setOrderId(orderId);
+        newOrder.setOrderId(orderId);//7
         
-        System.out.print("Enter customer ID: ");
-        int customerId = input.nextInt();
+        System.out.print("Enter customer ID: ");//8
+        int customerId = input.nextInt();//9
         
-        if(!cdata.checkCustomerID(customerId)) {
-            System.out.println("Customer ID not found. Cannot place order.");
-            return;
+        if(!cdata.checkCustomerID(customerId)) {//10
+            System.out.println("Customer ID not found. Cannot place order.");//11
+            return;//12
         }
         
-        newOrder.setCustomerRefrence(customerId);
+        newOrder.setCustomerRefrence(customerId);//13
         
-        LinkedList<Integer> orderProducts = new LinkedList<>();
-        double totalPrice = 0;
-        char addMore = 'y';
+        LinkedList<Integer> orderProducts = new LinkedList<>();//14
+        double totalPrice = 0;//15
+        char addMore = 'y';//16
         
-        while(addMore == 'y' || addMore == 'Y') {
-            System.out.print("Enter product ID: ");
-            int productId = input.nextInt();
+        while(addMore == 'y' || addMore == 'Y') {//17
+            System.out.print("Enter product ID: ");//18
+            int productId = input.nextInt();//19
             
-            Product product = pdata.getProductData(productId);
-            if(product != null && product.getStock() > 0) {
-                orderProducts.insert(productId);
-                totalPrice += product.getPrice();
+            Product product = pdata.getProductData(productId);//20
+            if(product != null && product.getStock() > 0) {//21
+                orderProducts.insert(productId);//22
+                totalPrice += product.getPrice();//23
                 
-                product.setStock(product.getStock() - 1);
-                System.out.println("Product added to order. Remaining stock: " + product.getStock());
+                product.setStock(product.getStock() - 1);//24
+                System.out.println("Product added to order. Remaining stock: " + product.getStock());//25
             } else {
-                System.out.println("Product not available or out of stock.");
+                System.out.println("Product not available or out of stock.");//26
             }
             
-            System.out.print("Add another product? (y/n): ");
-            addMore = input.next().charAt(0);
+            System.out.print("Add another product? (y/n): ");//27
+            addMore = input.next().charAt(0);//28
         }
         
-        if(orderProducts.empty()) {
-            System.out.println("No products added. Order cancelled.");
-            return;
+        if(orderProducts.empty()) {//29
+            System.out.println("No products added. Order cancelled.");//30
+            return;//31
         }
         
-        newOrder.setTotal_price(totalPrice);
+        newOrder.setTotal_price(totalPrice);//32
         
-        System.out.print("Enter order date (yyyy-MM-dd): ");
-        String dateStr = input.next();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        LocalDate orderDate = LocalDate.parse(dateStr, formatter);
-        newOrder.setDate(orderDate);
+        System.out.print("Enter order date (yyyy-MM-dd): ");//33
+        String dateStr = input.next();//34
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");//35
+        LocalDate orderDate = LocalDate.parse(dateStr, formatter);//36
+        newOrder.setDate(orderDate);//37
         
-        System.out.print("Enter order status (Pending/Shipped/Delivered/Cancelled): ");
-        newOrder.setStatus(input.next());
+        System.out.print("Enter order status (Pending/Shipped/Delivered/Cancelled): ");//38
+        newOrder.setStatus(input.next());//39
         
-        orderProducts.findFirst();
-        while(!orderProducts.last()) {
-            newOrder.addProduct(orderProducts.retrieve());
-            orderProducts.findNext();
+        orderProducts.findFirst();//40
+        while(!orderProducts.last()) {//41
+            newOrder.addProduct(orderProducts.retrieve());//42
+            orderProducts.findNext();//43
         }
-        if (!orderProducts.last()) {
-            newOrder.addProduct(orderProducts.retrieve());
+        if (!orderProducts.last()) {//44
+            newOrder.addProduct(orderProducts.retrieve());//45
         }
         
-        orders.insert(newOrder);
+        orders.insert(newOrder);//46
         
-        customers.findFirst();
-        while(!customers.last()) {
-            if(customers.retrieve().getCustomerId() == customerId) {
-                customers.retrieve().addOrder(orderId);
-                break;
+        customers.findFirst();//47
+        while(!customers.last()) {//48
+            if(customers.retrieve().getCustomerId() == customerId) {//49
+                customers.retrieve().addOrder(orderId);//50
+                break;//51
             }
-            customers.findNext();
+            customers.findNext();//52
         }
-        if (!customers.last() && customers.retrieve().getCustomerId() == customerId) {
-            customers.retrieve().addOrder(orderId);
+        if (!customers.last() && customers.retrieve().getCustomerId() == customerId) {//53
+            customers.retrieve().addOrder(orderId);//54
         }
         
-        System.out.println("Order placed successfully! Total: $" + totalPrice);
+        System.out.println("Order placed successfully! Total: $" + totalPrice);//55
     }
     
-  
+
     public static void placeOrder() {
-        Order newOrder = new Order();
+        Order newOrder = new Order();//1
         
-        System.out.print("Enter order ID: ");
-        int orderId = input.nextInt();
-        while(odata.checkOrderID(orderId)) {
-            System.out.print("Order ID already exists. Enter new order ID: ");
-            orderId = input.nextInt();
+        System.out.print("Enter order ID: ");//2
+        int orderId = input.nextInt();//3
+        while(odata.checkOrderID(orderId)) {//4
+            System.out.print("Order ID already exists. Enter new order ID: ");//5
+            orderId = input.nextInt();//6
         }
-        newOrder.setOrderId(orderId);
+        newOrder.setOrderId(orderId);//7
         
-        System.out.print("Enter customer ID: ");
-        int customerId = input.nextInt();
-        newOrder.setCustomerRefrence(customerId);
+        System.out.print("Enter customer ID: ");//8
+        int customerId = input.nextInt();//9
+        newOrder.setCustomerRefrence(customerId);//10
         
-        LinkedList<Integer> orderProducts = new LinkedList<>();
-        double totalPrice = 0;
-        char addMore = 'y';
+        LinkedList<Integer> orderProducts = new LinkedList<>();//11
+        double totalPrice = 0;//12
+        char addMore = 'y';//13
         
-        while(addMore == 'y' || addMore == 'Y') {
-            System.out.print("Enter product ID: ");
-            int productId = input.nextInt();
+        while(addMore == 'y' || addMore == 'Y') {//14
+            System.out.print("Enter product ID: ");//15
+            int productId = input.nextInt();//16
             
-            Product product = pdata.getProductData(productId);
-            if(product != null && product.getStock() > 0) {
-                orderProducts.insert(productId);
-                totalPrice += product.getPrice();
+            Product product = pdata.getProductData(productId);//17
+            if(product != null && product.getStock() > 0) {//18
+                orderProducts.insert(productId);//19
+                totalPrice += product.getPrice();//20
                 
-                product.setStock(product.getStock() - 1);
-                System.out.println("Product added to order. Remaining stock: " + product.getStock());
+                product.setStock(product.getStock() - 1);//21
+                System.out.println("Product added to order. Remaining stock: " + product.getStock());//22
             } else {
-                System.out.println("Product not available or out of stock.");
+                System.out.println("Product not available or out of stock.");//23
             }
             
-            System.out.print("Add another product? (y/n): ");
-            addMore = input.next().charAt(0);
+            System.out.print("Add another product? (y/n): ");//24
+            addMore = input.next().charAt(0);//25
         }
         
-        if(orderProducts.empty()) {
-            System.out.println("No products added. Order cancelled.");
+        if(orderProducts.empty()) {//26
+            System.out.println("No products added. Order cancelled.");//27
             return;
         }
         
-        newOrder.setTotal_price(totalPrice);
+        newOrder.setTotal_price(totalPrice);//28
         
-        System.out.print("Enter order date (yyyy-MM-dd): ");
-        String dateStr = input.next();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        LocalDate orderDate = LocalDate.parse(dateStr, formatter);
-        newOrder.setDate(orderDate);
+        System.out.print("Enter order date (yyyy-MM-dd): ");//29
+        String dateStr = input.next();//30
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");//31
+        LocalDate orderDate = LocalDate.parse(dateStr, formatter);//32
+        newOrder.setDate(orderDate);//33
         
-        System.out.print("Enter order status (Pending/Shipped/Delivered/Cancelled): ");
-        newOrder.setStatus(input.next());
+        System.out.print("Enter order status (Pending/Shipped/Delivered/Cancelled): ");//34
+        newOrder.setStatus(input.next());//35
         
-        orderProducts.findFirst();
-        while(!orderProducts.last()) {
-            newOrder.addProduct(orderProducts.retrieve());
-            orderProducts.findNext();
+        orderProducts.findFirst();//36
+        while(!orderProducts.last()) {//37
+            newOrder.addProduct(orderProducts.retrieve());//38
+            orderProducts.findNext();//39
         }
-        if (!orderProducts.last()) {
-            newOrder.addProduct(orderProducts.retrieve());
+        if (!orderProducts.last()) {//40
+            newOrder.addProduct(orderProducts.retrieve());//41
         }
         
-        orders.insert(newOrder);
+        orders.insert(newOrder);//42
         
-        customers.findFirst();
-        while(!customers.last()) {
-            if(customers.retrieve().getCustomerId() == customerId) {
-                customers.retrieve().addOrder(orderId);
-                break;
+        customers.findFirst();//43
+        while(!customers.last()) {//44
+            if(customers.retrieve().getCustomerId() == customerId) {//45
+                customers.retrieve().addOrder(orderId);//46
+                break;//47
             }
-            customers.findNext();
+            customers.findNext();//48
         }
-        if (!customers.last() && customers.retrieve().getCustomerId() == customerId) {
-            customers.retrieve().addOrder(orderId);
+        if (!customers.last() && customers.retrieve().getCustomerId() == customerId) {//49
+            customers.retrieve().addOrder(orderId);//50
         }
         
-        System.out.println("Order placed successfully! Total: $" + totalPrice);
+        System.out.println("Order placed successfully! Total: $" + totalPrice);//51
     }
     
     public static void cancelOrder() {
@@ -678,7 +678,7 @@ public class Main {
                     if(product != null) {
                         System.out.println("- " + product.getName() + 
                                          " (ID: " + productId + 
-                                         ", Avg Rating: " + String.format("%.2f", avgRating) + ")");
+                                         ", Avg Rating: " + avgRating);
                         found = true;
                     }
                 }
@@ -827,6 +827,4 @@ public class Main {
         
         input.close();
     }
-
 }
-
