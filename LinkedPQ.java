@@ -32,13 +32,11 @@ public class LinkedPQ<T> {
             currentPosition++;
         }
         
-        // Check last element
         if (!list.last() && list.retrieve().priority > highest.priority) {
             highest = list.retrieve();
             highestPosition = currentPosition;
         }
         
-        // Second pass: remove the element at highestPosition
         list.findFirst();
         for (int i = 0; i < highestPosition; i++) {
             list.findNext();
@@ -56,4 +54,5 @@ public class LinkedPQ<T> {
     public boolean empty() {
         return list.empty();
     }
+
 }
