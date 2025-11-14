@@ -234,7 +234,7 @@ public class Main {
             
             switch(choice) {
                 case 1:
-                    placeOrder(); // ما تتحقق من وجود العميل
+                    placeOrder(); 
                     break;
                 case 2:
                     cancelOrder();
@@ -829,3 +829,4 @@ public class Main {
     }
 
 }
+
